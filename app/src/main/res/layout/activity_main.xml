@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.overtimego.draco.overtimego.MainActivity">
+
+    <com.overtimego.draco.overtimego.CustomViewPager
+        android:id="@+id/main_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/main_line" >
+    </com.overtimego.draco.overtimego.CustomViewPager>
+
+    <View
+        android:id="@+id/main_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/home_tabBarView"
+        android:background="#333333" />
+
+    <com.overtimego.draco.overtimego.TabBarView
+        android:id="@+id/home_tabBarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

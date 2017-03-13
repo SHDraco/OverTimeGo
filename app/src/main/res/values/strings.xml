@@ -2,5 +2,11 @@
     <string name="app_name">OverTimeGo</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="item_title_1">Name</string>
+    <string name="button_add">添加标签</string>
+    <string name="button_del">DEL</string>
+    <string name="title_fragment3">OverTime</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

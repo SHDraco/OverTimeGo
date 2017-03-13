@@ -6,16 +6,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment2 extends Fragment {
+public class ManagerApprove extends Fragment {
 
-    private CalendarView calendarView;
-    public Fragment2() {
+
+    public ManagerApprove() {
         // Required empty public constructor
     }
 
@@ -24,9 +23,7 @@ public class Fragment2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment2, container, false);
-        calendarView = (CalendarView)view.findViewById(R.id.calendarView);
-        return view;
+        return inflater.inflate(R.layout.fragment_manager_approve, container, false);
     }
 
 }

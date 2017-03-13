@@ -4,15 +4,6 @@
               android:layout_height="match_parent"
               android:orientation="vertical" >
 
-    <TextView
-        android:text="history"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="40sp"
-        android:textColor="#fff"
-        android:layout_marginTop="5dp"
-        android:background="#221199"/>
     <!-- ListFragment对应的android:id值固定为"@id/android:list" -->
     <ListView
         android:id="@id/android:list"

@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:background="#0f0"
+              android:orientation="vertical"
+             tools:context="com.overtimego.draco.overtimego.ItemBaseCell">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <EditText
+        android:id="@+id/et_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="3dp"
+        android:layout_gravity="center"
+        android:editable="false"
+        android:focusable="false"
+        android:hint="wait"/>
+    <LinearLayout
+        android:id="@+id/ibc_linear_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@id/et_content">
+        <Button
+            android:id="@+id/button_item_cell_add"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:text="@string/button_add"/>
+
+    </LinearLayout>
+    <TextView
+
+        android:id="@+id/item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/item_title_1"/>
+    <ListView
+        android:id="@+id/item_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#afa"
+        android:layout_gravity="center"
+        android:layout_below="@id/item_title"
+        android:layout_above="@id/ibc_linear_button_layout"></ListView>
+
+</RelativeLayout>

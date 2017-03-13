@@ -1,13 +1,56 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.overtimego.draco.overtimego.Fragment3">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.overtimego.draco.overtimego.Fragment3">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/fragment3_relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="33"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
-</FrameLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="#333333" />
+        <Switch
+            android:id="@+id/fragment3_switch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="是否坐班车"
+            android:layout_weight="7"
+            android:textOff="否"
+            android:textOn="是"
+            android:gravity="center"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#333333" />
+        <Button
+            android:id="@+id/fragment3_button_commit"
+            android:layout_alignParentRight="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="GO"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="#333333" />
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/fragment_item"
+        android:name="com.overtimego.draco.overtimego.ItemBase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragment3_relative_layout"></fragment>
+
+
+</RelativeLayout>

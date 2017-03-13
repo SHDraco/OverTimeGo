@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:orientation="vertical"
+             tools:context="com.overtimego.draco.overtimego.ItemBase">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:orientation="horizontal">
+
+        <fragment
+            android:id="@+id/fragment_item1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:name="com.overtimego.draco.overtimego.ItemBaseCell"
+            android:layout_weight="1"></fragment>
+        <View
+            android:id="@+id/item_line1"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/home_tabBarView"
+            android:background="#333333" />
+        <fragment
+            android:id="@+id/fragment_item2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:name="com.overtimego.draco.overtimego.ItemBaseCell"
+            android:layout_weight="1"></fragment>
+        <View
+            android:id="@+id/item_line2"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/home_tabBarView"
+            android:background="#333333" />
+        <fragment
+            android:id="@+id/fragment_item3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:name="com.overtimego.draco.overtimego.ItemBaseCell"
+            android:layout_weight="1"></fragment>
+    </LinearLayout>
+
+
+</LinearLayout>

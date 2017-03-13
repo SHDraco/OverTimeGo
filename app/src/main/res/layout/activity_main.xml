@@ -7,15 +7,30 @@
     android:layout_height="match_parent"
     tools:context="com.overtimego.draco.overtimego.MainActivity">
 
+
+    <com.overtimego.draco.overtimego.UserTitleBar
+        android:id="@+id/main_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+    </com.overtimego.draco.overtimego.UserTitleBar>
+
+    <View
+        android:id="@+id/main_line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/main_title"
+        android:background="#333333" />
     <com.overtimego.draco.overtimego.CustomViewPager
         android:id="@+id/main_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/main_line" >
+        android:layout_above="@+id/main_line2"
+        android:layout_below="@+id/main_line1" >
     </com.overtimego.draco.overtimego.CustomViewPager>
 
     <View
-        android:id="@+id/main_line"
+        android:id="@+id/main_line2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/home_tabBarView"

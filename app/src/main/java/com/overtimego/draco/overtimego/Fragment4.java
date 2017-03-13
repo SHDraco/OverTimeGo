@@ -5,21 +5,33 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 import java.util.List;
 
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
 import lecho.lib.hellocharts.gesture.ZoomType;
+import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Column;
+import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.model.ValueShape;
 import lecho.lib.hellocharts.model.Viewport;
+import lecho.lib.hellocharts.util.ChartUtils;
+import lecho.lib.hellocharts.view.Chart;
+import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.LineChartView;
 
 
@@ -28,112 +40,155 @@ import lecho.lib.hellocharts.view.LineChartView;
  */
 public class Fragment4 extends Fragment {
 
-    private LineChartView lineChart;
-
-    String[] date = {"10-22", "11-22", "12-22", "1-22", "6-22", "5-23", "5-22", "6-22", "5-23", "5-22"};//X轴的标注
-    int[] score = {50, 42, 90, 33, 10, 74, 22, 18, 79, 20};//图表的数据点
-    private List<PointValue> mPointValues = new ArrayList<PointValue>();
-    private List<AxisValue> mAxisXValues = new ArrayList<AxisValue>();
-
     public Fragment4() {
         // Required empty public constructor
     }
 
+    public final static String[] months = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+            "Sep", "Oct", "Nov", "Dec",};
+
+    public final static String[] days = new String[]{"Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun",};
+
+    private LineChartView chartTop;
+    private ColumnChartView chartBottom;
+
+    private LineChartData lineData;
+    private ColumnChartData columnData;
+
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment4, container, false);
-        lineChart = (LineChartView) view.findViewById(R.id.line_chart);
-        getAxisXLables();//获取x轴的标注
-        getAxisPoints();//获取坐标点
-        initLineChart();//初始化
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment4, container, false);
+
+        // *** TOP LINE CHART ***
+        chartTop = (LineChartView) rootView.findViewById(R.id.chart_top);
+
+        // Generate and set data for line chart
+        generateInitialLineData();
+
+        // *** BOTTOM COLUMN CHART ***
+
+        chartBottom = (ColumnChartView) rootView.findViewById(R.id.chart_bottom);
+
+        generateColumnData();
+
+        return rootView;
     }
 
-    private void getAxisXLables() {
-        for (int i = 0; i < date.length; i++) {
-            mAxisXValues.add(new AxisValue(i).setLabel(date[i]));
+    private void generateColumnData() {
+
+        int numSubcolumns = 1;
+        int numColumns = months.length;
+
+        List<AxisValue> axisValues = new ArrayList<AxisValue>();
+        List<Column> columns = new ArrayList<Column>();
+        List<SubcolumnValue> values;
+        for (int i = 0; i < numColumns; ++i) {
+
+            values = new ArrayList<SubcolumnValue>();
+            for (int j = 0; j < numSubcolumns; ++j) {
+                values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
+            }
+
+            axisValues.add(new AxisValue(i).setLabel(months[i]));
+
+            columns.add(new Column(values).setHasLabelsOnlyForSelected(true));
         }
+
+        columnData = new ColumnChartData(columns);
+
+        columnData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
+        columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(2));
+
+        chartBottom.setColumnChartData(columnData);
+
+        // Set value touch listener that will trigger changes for chartTop.
+        chartBottom.setOnValueTouchListener(new ValueTouchListener());
+
+        // Set selection mode to keep selected month column highlighted.
+        chartBottom.setValueSelectionEnabled(true);
+
+        chartBottom.setZoomType(ZoomType.HORIZONTAL);
+
+        // chartBottom.setOnClickListener(new View.OnClickListener() {
+        //
+        // @Override
+        // public void onClick(View v) {
+        // SelectedValue sv = chartBottom.getSelectedValue();
+        // if (!sv.isSet()) {
+        // generateInitialLineData();
+        // }
+        //
+        // }
+        // });
+
     }
 
-    private void getAxisPoints() {
-        for (int i = 0; i < score.length; i++) {
-            mPointValues.add(new PointValue(i, score[i]));
+    /**
+     * Generates initial data for line chart. At the begining all Y values are equals 0. That will change when user
+     * will select value on column chart.
+     */
+    private void generateInitialLineData() {
+        int numValues = 7;
+
+        List<AxisValue> axisValues = new ArrayList<AxisValue>();
+        List<PointValue> values = new ArrayList<PointValue>();
+        for (int i = 0; i < numValues; ++i) {
+            values.add(new PointValue(i, 0));
+            axisValues.add(new AxisValue(i).setLabel(days[i]));
         }
-    }
 
-    private void initLineChart() {
-        Line line = new Line(mPointValues).setColor(Color.parseColor("#FFCD41"));  //折线的颜色（橙色）
+        Line line = new Line(values);
+        line.setColor(ChartUtils.COLOR_GREEN).setCubic(true);
+
         List<Line> lines = new ArrayList<Line>();
-        line.setShape(ValueShape.CIRCLE);//折线图上每个数据点的形状  这里是圆形 （有三种 ：ValueShape.SQUARE  ValueShape.CIRCLE  ValueShape.DIAMOND）
-        line.setCubic(false);//曲线是否平滑，即是曲线还是折线
-        line.setFilled(false);//是否填充曲线的面积
-        line.setHasLabels(true);//曲线的数据坐标是否加上备注
-//      line.setHasLabelsOnlyForSelected(true);//点击数据坐标提示数据（设置了这个line.setHasLabels(true);就无效）
-        line.setHasLines(true);//是否用线显示。如果为false 则没有曲线只有点显示
-        line.setHasPoints(true);//是否显示圆点 如果为false 则没有原点只有点显示（每个数据点都是个大的圆点）
         lines.add(line);
-        LineChartData data = new LineChartData();
-        data.setLines(lines);
 
-        //坐标轴
-        Axis axisX = new Axis(); //X轴
-        axisX.setHasTiltedLabels(true);  //X坐标轴字体是斜的显示还是直的，true是斜的显示
-        axisX.setTextColor(Color.WHITE);  //设置字体颜色
-        //axisX.setName("date");  //表格名称
-        axisX.setTextSize(10);//设置字体大小
-        axisX.setMaxLabelChars(8); //最多几个X轴坐标，意思就是你的缩放让X轴上数据的个数7<=x<=mAxisXValues.length
-        axisX.setValues(mAxisXValues);  //填充X轴的坐标名称
-        data.setAxisXBottom(axisX); //x 轴在底部
-        //data.setAxisXTop(axisX);  //x 轴在顶部
-        axisX.setHasLines(true); //x 轴分割线
+        lineData = new LineChartData(lines);
+        lineData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
+        lineData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
 
-        // Y轴是根据数据的大小自动设置Y轴上限(在下面我会给出固定Y轴数据个数的解决方案)
-        Axis axisY = new Axis();  //Y轴
-        axisY.setName("");//y轴标注
-        axisY.setTextSize(10);//设置字体大小
-        data.setAxisYLeft(axisY);  //Y轴设置在左边
-        //data.setAxisYRight(axisY);  //y轴设置在右边
+        chartTop.setLineChartData(lineData);
 
+        // For build-up animation you have to disable viewport recalculation.
+        chartTop.setViewportCalculationEnabled(false);
 
-        //设置行为属性，支持缩放、滑动以及平移
-        lineChart.setInteractive(true);
-        lineChart.setZoomType(ZoomType.HORIZONTAL);
-        lineChart.setMaxZoom((float) 2);//最大方法比例
-        lineChart.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
-        lineChart.setLineChartData(data);
-        lineChart.setVisibility(View.VISIBLE);
-        /**注：下面的7，10只是代表一个数字去类比而已
-         * 当时是为了解决X轴固定数据个数。见（http://forum.xda-developers.com/tools/programming/library-hellocharts-charting-library-t2904456/page2）;
-         */
-        Viewport v = new Viewport(lineChart.getMaximumViewport());
-        v.left = 0;
-        v.right = 10;
-        lineChart.setCurrentViewport(v);
-        /*这4句代码可以设置X轴数据的显示个数（x轴0-7个数据），
-  1    当数据点个数小于（29）的时候，缩小到极致hellochart默认的是所有显示。
-  2    当数据点个数大于（29）的时候，
-     2.1  若不设置axisX.setMaxLabelChars(int count)这句话,则会自动适配X轴所能显示的尽量合适的数据个数。
-     2.2  若设置axisX.setMaxLabelChars(int count)这句话, 33个数据点测试，
-            2.2.1  若 axisX.setMaxLabelChars(10); 里面的10大于v.right= 7; 里面的7，则 刚开始X轴显示7条数据，然后缩放的时候X轴的个数会保证大于7小于10
-            2.2.2  若小于v.right= 7;中的7,反正我感觉是这两句都好像失效了的样子 - -!
-                   若这儿不设置 v.right= 7; 这句话，则图表刚开始就会尽可能的显示所有数据，交互性太差
+        // And set initial max viewport and current viewport- remember to set viewports after data.
+        Viewport v = new Viewport(0, 110, 6, 0);
+        chartTop.setMaximumViewport(v);
+        chartTop.setCurrentViewport(v);
 
-                   下面看一下固定Y轴个数的解决方案：
-例：想要固定Y轴数据从0-100
+        chartTop.setZoomType(ZoomType.HORIZONTAL);
+    }
 
-Axis axisY = new Axis().setHasLines(true);
-axisY.setMaxLabelChars(6);//max label length, for example 60
-List<AxisValue> values = new ArrayList<>();
-for(int i = 0; i < 100; i+= 10){
-    AxisValue value = new AxisValue(i);
-    String label = "";
-    value.setLabel(label);
-    values.add(value);
-}
-axisY.setValues(values);
-*/
+    private void generateLineData(int color, float range) {
+        // Cancel last animation if not finished.
+        chartTop.cancelDataAnimation();
+
+        // Modify data targets
+        Line line = lineData.getLines().get(0);// For this example there is always only one line.
+        line.setColor(color);
+        for (PointValue value : line.getValues()) {
+            // Change target only for Y value.
+            value.setTarget(value.getX(), (float) Math.random() * range);
+        }
+
+        // Start new data animation with 300ms duration;
+        chartTop.startDataAnimation(300);
+    }
+
+    private class ValueTouchListener implements ColumnChartOnValueSelectListener {
+
+        @Override
+        public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
+            generateLineData(value.getColor(), 100);
+        }
+
+        @Override
+        public void onValueDeselected() {
+
+            generateLineData(ChartUtils.COLOR_GREEN, 0);
+
+        }
     }
 }
